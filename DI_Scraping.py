@@ -22,7 +22,6 @@ if datetime.now(pytz.timezone('America/Sao_Paulo')).hour < 21:
 else:
   Data = datetime.now(pytz.timezone('America/Sao_Paulo')).strftime("%Y-%m-%d")
 print(Data)
-
 ### Web Scraping
 
 # warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -46,10 +45,14 @@ for i in range(len(Vencimentos)):
     df=df.append({'DI':di1[i].text,'Vencimento':Vencimentos[i].text,str(Data):Taxas[i].text}, ignore_index=True)
 
 ### Treating the Data
-
-df['DI'] = df['DI'].str.replace('BMF:', '')
-df[str(Data)] = pd.to_numeric(df[str(Data)].str.replace(',', '.'))
-df[str(Data)]=df[str(Data)]/100
+try:
+  df['DI'] = df['DI'].str.replace('BMF:', '')
+  df[str(Data)] = pd.to_numeric(df[str(Data)].str.replace(',', '.'))
+  df[str(Data)]=df[str(Data)]/100
+except:
+  df['DI'] = df['DI'].str.replace('BMF:', '')
+  df[str(Data)] = pd.to_numeric(df[str(Data)].str.replace(',', '.').str.replace('-',''))
+  df[str(Data)]=df[str(Data)]/100
 print(df)
 # with pd.ExcelWriter(Planilha, engine='openpyxl', datetime_format='dd/mm/yyyy', mode='a') as writer:
 #     df.to_excel(writer, sheet_name=str(data))
@@ -66,12 +69,12 @@ plt.show()
 
 ### Importing to a excel
 
-df.to_excel('Di_Historico.xlsx')
+# df.to_excel('Di_Historico.xlsx')
 
 ### Once Imported to excel you just need to concat with the news collumns evry day!! 
 
-# existing_df = pd.read_excel('Di_pro_Juppa.xlsx')
+existing_df = pd.read_excel('Di_Historico.xlsx')  
 
-# new_df = pd.concat([existing_df, df[str(Data)]], axis=1) ### Concating the new collumn
+new_df = pd.concat([existing_df, df[str(Data)]], axis=1) ### Concating the new collumn
 
-# new_df.to_excel('Di_pro_Juppa.xlsx', index=False) ### Saving above the old one
+new_df.to_excel('Di_Historico.xlsx', index=False) ### Saving above the old one
