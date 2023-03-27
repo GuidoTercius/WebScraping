@@ -66,7 +66,7 @@ plt.show()
 
 ### Importing to a excel
 
-df.to_excel('Di_pro_Juppa.xlsx')
+df.to_excel('Di_Historico.xlsx')
 
 ### Once Imported to excel you just need to concat with the news collumns evry day!! 
 
